@@ -15,9 +15,8 @@ int main(int argc,char **argv)
 	char c;
 	for(int idx=1;idx<argc;++idx)
 	{
-		printf("opening : %s\n",argv[idx]);
    		fileptr = fopen(argv[idx],"r");	
-		if(fileptr == NULL) ierror("ERROR: No Such File.");
+		if(fileptr == NULL) ierror("wcat: cannot open file");
 		c = getc(fileptr);
 		while(c != EOF)
 		{
