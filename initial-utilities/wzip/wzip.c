@@ -66,5 +66,5 @@ void compressFile(char *filename)
         }
     }
     post(freq , last);
+    fclose(file);
 }
-

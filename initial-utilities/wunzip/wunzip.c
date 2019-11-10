@@ -24,7 +24,6 @@ void read(int *freq, char *lett,FILE * file)
 {
     fread( freq , 4, 1, file);
     fread( lett , 1, 1, file);
-    printf("freq");
 }
 void uncompressFile(char *filename)
 {
