@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 FILE * out ; 
 void exiterr(char *msg)
@@ -20,46 +21,50 @@ int main(int argc,char **argv)
         compressFile(argv[argi]);
 
 }
+FILE * file;
+//void write(int freq , char lett)
+//{
+//    printf("\n>>%d %c\n", freq, lett);
+//    printf("%c" , (char ) freq >> 8*3 );
+//    printf("%c" , (char ) freq >> 8*2 );
+//    printf("%c" , (char ) freq >> 8*1 );
+//    printf("%c" , (char ) freq >> 8*0 );
+//    printf("%c" , lett );
+//}
 
-void write(int freq , char lett)
+void post(int freq, char lett)
 {
-    printf(">> %d %c\n",freq,lett);
-    //fwrite(&freq,4,1,stdout);
-    //fwrite(&lett,1,1,stdout);
-    fwrite(&freq,4,1,out);
-    fwrite(&lett,1,1,out);
-
+    fwrite(&freq ,4,1,stdout );
+    fwrite(&lett ,1,1,stdout );
 }
 
 void compressFile(char *filename)
 {
-
-    FILE * file = fopen(filename,"r");
-    out =  fopen("bitest","wb");
-    if(!file)
-        exiterr("wzip : cannot open file");
-    char charc,c;
-    int  count = 0;
-    bool first = true;
-    while( (c = getc(file)) != EOF)
+    char curr , last = '\0' ;
+    int  freq  = 0;
+    bool first = true ;
+    file = fopen(filename , "r");
+    if( file == NULL ) exiterr("cannot open file");
+    while( (curr = fgetc(file)) != EOF )
     {
-        if (first)
+        if ( first )
         {
-            charc = c;
-            ++count;
-            first = false;
+            freq++;
+            last = curr;
+            first= false;
         }
         else
         {
-            if(c == charc) ++count;
+            if (last == curr)
+                freq++;
             else
             {
-                write(count,charc);
-                count  = 1;
-                charc  = c;
+                post(freq, last);
+                freq = 1;
+                last = curr;
             }
         }
     }
-    write(count,charc);
+    post(freq , last);
 }
 
